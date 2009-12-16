@@ -1,4 +1,4 @@
-require 'test/unit'
+require File.join(File.dirname(__FILE__) ,'/test_helper')
 require 'lib/records_manager'
 
 class RecordsManagerTest < Test::Unit::TestCase

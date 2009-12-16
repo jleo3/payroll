@@ -1,4 +1,4 @@
-require 'lib/employee'
+require 'app/models/employee'
 
 class RecordsManager
 
