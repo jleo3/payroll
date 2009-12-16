@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'dm-core'
+require 'dm-aggregates'
 
 DataMapper.setup(:default, :adapter => 'mysql',
                   :username => 'root',
@@ -12,7 +13,5 @@ class Employee
   property :emp_id,   Integer
   property :name,     String
   property :address,  Text
-  property :pay_rate, Object
-
 end
 Employee.auto_migrate!
