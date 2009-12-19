@@ -46,18 +46,40 @@ class RecordsManagerTest < Test::Unit::TestCase
     assert_creation_of_employee_with commission_salary
   end
 
-  private
-  def new_salary(compensation, commission=nil)
-    Salary.new :pay_rate => pay_rate(compensation),
-                                   :compensation => compensation,
-                                   :commission => commission
+  def test_add_employee_fails_when_provided_no_emp_id
+    assert_employee_not_created_with_nil :emp_id
   end
 
+  def test_add_employee_fails_when_provided_no_name
+    assert_employee_not_created_with_nil :name
+  end
+
+  def test_add_employee_fails_when_provided_no_ddress
+    assert_employee_not_created_with_nil :address
+  end
+
+  private
+  def assert_employee_was_created
+    assert_equal 1, Employee.count
+  end
+    
   def assert_creation_of_employee_with(salary)
     @new_employee_fields[:salary] = salary
     
     @records_manager.add_employee(@new_employee_fields)
     assert_equal salary, new_employee.salary
+  end
+
+  def assert_employee_not_created_with_nil(field)
+    @new_employee_fields[field] = nil
+    error_message = "must not be blank"
+    assert_match error_message, @records_manager.add_employee(@new_employee_fields)
+  end
+
+  def new_salary(compensation, commission=nil)
+    Salary.new :pay_rate => pay_rate(compensation),
+               :compensation => compensation,
+               :commission => commission
   end
 
   def pay_rate(type)
@@ -69,8 +91,4 @@ class RecordsManagerTest < Test::Unit::TestCase
     Employee.first
   end
 
-  def assert_employee_was_created
-    assert_equal 1, Employee.count
-  end
-    
 end

@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'dm-core'
 require 'dm-aggregates'
+require 'dm-validations'
 require 'app/models/salary'
 
 DataMapper.setup(:default, :adapter => 'mysql',
@@ -16,4 +17,6 @@ class Employee
   property :address,  Text
 
   has 1, :salary
+
+  validates_present :emp_id, :name, :address
 end

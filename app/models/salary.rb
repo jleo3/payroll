@@ -15,7 +15,6 @@ class Salary
   property :pay_rate,       Float
   property :commission,     Float
   property :compensation,  Enum['monthly','hourly']
-  property :type,           Discriminator
 
   belongs_to :employee
 end
