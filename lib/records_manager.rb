@@ -1,3 +1,4 @@
+require 'app/models/salary'
 require 'app/models/employee'
 
 class RecordsManager
