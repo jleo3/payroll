@@ -19,4 +19,12 @@ class Employee
   has 1, :salary
 
   validates_present :emp_id, :name, :address
+  validates_is_unique :emp_id
+
+  def self.delete_by_emp_id(id)
+    if emp = Employee.first(:emp_id => id)
+      emp.destroy!
+    else return false
+    end
+  end
 end

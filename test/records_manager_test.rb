@@ -2,6 +2,7 @@ require File.join(File.dirname(__FILE__) ,'/test_helper')
 require 'lib/records_manager'
 
 class RecordsManagerTest < Test::Unit::TestCase
+  NON_EXISTENT_EMP_ID = 99
 
   def setup
     DataMapper.auto_migrate!
@@ -31,6 +32,18 @@ class RecordsManagerTest < Test::Unit::TestCase
     assert_equal @any_address, new_employee.address
   end
 
+  def test_delete_employee_deletes_employee_record
+    @employee = create_one_employee
+
+    assert_employee_was_deleted do
+      @records_manager.delete_employee(@employee.emp_id)
+    end
+  end
+
+  def test_delete_employee_emp_id_not_found
+    assert_equal RecordsManager::EMPLOYEE_NOT_FOUND_MESSAGE, @records_manager.delete_employee(NON_EXISTENT_EMP_ID)    
+  end
+
   def test_add_employee_creates_hourly_rate_employee
     hourly_salary = new_salary('hourly')
     assert_creation_of_employee_with hourly_salary
@@ -58,7 +71,14 @@ class RecordsManagerTest < Test::Unit::TestCase
     assert_employee_not_created_with_nil :address
   end
 
+
   private
+  def create_one_employee
+    @records_manager.add_employee(@new_employee_fields)
+    assert_employee_was_created
+    Employee.first
+  end
+
   def assert_employee_was_created
     assert_equal 1, Employee.count
   end
@@ -68,6 +88,12 @@ class RecordsManagerTest < Test::Unit::TestCase
     
     @records_manager.add_employee(@new_employee_fields)
     assert_equal salary, new_employee.salary
+  end
+
+  def assert_employee_was_deleted
+    new_employee_count = Employee.count - 1
+    yield
+    assert_equal new_employee_count, Employee.count
   end
 
   def assert_employee_not_created_with_nil(field)
